@@ -1,0 +1,26 @@
+<!-- templates/signup.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-6 is-offset-3">
+    <h3 class="title"> Create  </h3>
+    <div class="box">
+        
+        <form method="POST" action="/create">
+            <div class="field">
+                <div class="control">
+              
+                     <label class="label">You say:</label>
+                    <input class="input" type="text" name="body" placeholder="body" autofocus="" id="validationDefault01" required="">
+                    
+    
+                </div>
+            </div>
+
+            
+            <button class="button is-block is-info is-large is-fullwidth">Create</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

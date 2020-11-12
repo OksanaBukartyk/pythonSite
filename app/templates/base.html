@@ -1,0 +1,89 @@
+<!-- templates/base.html -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My site</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    
+</head>
+
+<body>
+    <section class="hero is-primary is-fullheight">
+
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+
+                    <div id="navbarMenuHeroA" class="navbar-menu">
+                        <div class="navbar-start">
+                         <a href="{{ url_for('index') }}" class="navbar-item">
+                                My site</a>
+                        </div>
+                        <div class="navbar-end">
+                           
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('profile') }}" class="navbar-item">
+                                Profile
+                            </a>
+                             
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                            
+                            <a  href="{{ url_for('posts')}}" class="navbar-item">My posts</a> 
+                            {% endif %}
+                             
+                            
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('create') }}" class="navbar-item">
+                                Create post
+                            </a>
+                             
+                            {% endif %}
+
+                            {% if not current_user.is_authenticated %}
+                            <a href="{{ url_for('login') }}" class="navbar-item">
+                                Login
+                            </a>
+                            <a href="{{ url_for('signup') }}" class="navbar-item">
+                                Sign Up
+                            </a>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('logout') }}" class="navbar-item">
+                                Logout
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                
+
+            </nav>
+        </div>
+        
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                 {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+               {% block content %}
+               {% endblock %}
+            </div>
+        </div>
+
+        
+
+        <footer>
+          <p>&copy; Created by Oksana Petriv</p>
+        </footer>
+    </section>
+</body>
+
+</html>

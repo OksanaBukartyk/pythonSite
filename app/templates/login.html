@@ -1,0 +1,44 @@
+<!-- templates/login.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="column is-6 is-offset-3">
+    <h3 class="title">Log In</h3>
+    <div class="box">
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
+            </div>
+        {% endif %}
+        <form method="post" action="{{ url_for('login', next=request.args.get('next')) }}">
+         
+
+             {{ form.hidden_tag() }}
+       
+        <p>
+            <h3 style="color: #00394d" >
+            {{ form.email.label }}:</h3>
+            {{ form.email(class="input is-large") }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            <h3 style="color: #00394d" >
+            {{ form.password.label }}:</h3>
+            {{ form.password(class="input is-large") }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        
+        <p>{{ form.submit(class="button is-block is-info is-large is-fullwidth") }}</p>
+
+
+
+        </form>
+
+    </div>
+</div>
+{% endblock %}
