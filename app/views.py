@@ -54,7 +54,7 @@ def signup():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(form.username.data,form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -62,12 +62,17 @@ def signup():
         return redirect(url_for('login'))
     return render_template('signup.html', title='Register', form=form)
 
-@app.route('/posts')
+@app.route('/all_posts')
 @login_required 
-def posts():
+def all_posts():
     posts = Post.query.all()
-    return render_template('posts.html', posts=posts)
+    return render_template('all_posts.html', posts=posts)
 
+@app.route('/my_posts')
+@login_required 
+def my_posts():
+    posts = Post.query.filter_by(user_id=current_user.id)
+    return render_template('my_posts.html', posts=posts)
 
 @app.route('/logout')
 def logout():
@@ -105,6 +110,8 @@ def profile():
         form.username.data = current_user.username
         form.email.data = current_user.email
         form.about_me.data = current_user.about_me
+        
+
         
 
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
