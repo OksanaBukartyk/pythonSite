@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h1>User: {{ current_user.username }}</h1>
+    <hr>
     {% for post in posts %}
-    <h1>{{post.author.username}}</h1> says: <b>{{post.body}}</b></p>
+    
+    <td><img class="rounded-circle account-img"  src="{{ file_image }}"></td>
+    <p>
+    {{ post.author.username }} says: <b>{{ post.body }}</b>
+    </p>
     {% endfor %}
 {% endblock %}
+

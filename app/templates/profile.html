@@ -6,14 +6,98 @@
 
 <div class = "content_section">
 <div class  = "media">
-  <img class="rounded-circle account-img" scr = "{{ image_file }}">
+   
+  <img width="300px" class="rounded-circle  border border-dark img-responsive " src="{{ image_file }}">
+  
+<div class="column is-8 is-offset-1">
+    <h3 class="title">Account Info</h3>
+    <div class="box">
   <div class = "media-body">
-    <h2 class = "account-heading">{{ current_user.username}}</h2>
-    <p class = "text-secondary"> {{current_user.email}}</p>
+    <h2 class = "account-heading">User name: {{ current_user.username}}  <legend class="border-bottom mb-4"></h2>
+
+    <p class = "text-secondary"> Email: {{current_user.email}}</p>
+    {% if current_user.about_me %}
+<p class = "text-secondary">About me: {{ current_user.about_me }}</p>{% endif %}
+    {% if current_user.last_seen %}
+<p class = "text-secondary">Last seen on: {{ current_user.last_seen }}</p>{% endif %}
   </div>
-
-
 </div>
 </div>
 
-{% endblock %}
+</div>
+</div>
+ <form method="POST" action="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4"><br>Edit Form</legend>
+                <div class="form-group">
+                    {{ form.username.label(class="form-control-label") }}
+
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                 {{ form.about_me.label (class="form-control-label")}}
+                 {% if form.about_me.errors %}
+                    {{ form.about_me(cols=50, rows=4) }}
+                     <div class="invalid-feedback">
+                            {% for error in form.about_me.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.about_me(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+
+
+                <div class="form-group">
+                    {{ form.picture.label() }}
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        {% for error in form.picture.errors %}
+                            <span class="text-danger">{{ error }}</span></br>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+               
+
+
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+
+
+                            {% if current_user.is_authenticated %}
+                            <a class="btn btn-outline-info" href="{{ url_for('edit_pass') }}" class="navbar-item">
+                                Edit your password
+                            </a>
+                             
+                            {% endif %}
+    </div>
+{% endblock content %}
