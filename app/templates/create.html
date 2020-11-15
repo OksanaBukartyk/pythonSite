@@ -1,27 +1,36 @@
-<!-- templates/signup.html -->
-
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title"> Create  </h3>
+<div class="column is-6 is-offset-3">
+    <h3 class="title">Create new post</h3>
     <div class="box">
-        
-        <form method="POST" action="/create">
-            <div class="field">
-                <div class="control">
-              
-                     <label class="label">You say:</label>
-                    <input class="input" type="text" name="body" placeholder="body" autofocus="" id="validationDefault01" required="">
-                    
-    
-                </div>
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
             </div>
+        {% endif %}
+        <form method="post" action="{{ url_for('create') }}">
+         
 
-            
-              
-            <button class="button is-block is-info is-large ">Create</button>
+             {{ form.hidden_tag() }}
+       
+        <p>
+            <h2 style="color: #00394d" >
+            You say:</h2>
+            {{ form.body(class="input is-large") }}<br>
+            {% for error in form.body.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        
+        <p>{{ form.submit(class="btn btn-outline-info ") }}</p>
+
+
+
         </form>
+
     </div>
 </div>
-{% end block %}
+
+{% endblock %}
