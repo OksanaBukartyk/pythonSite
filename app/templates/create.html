@@ -13,10 +13,18 @@
          
 
              {{ form.hidden_tag() }}
-       
         <p>
             <h2 style="color: #00394d" >
-            You say:</h2>
+            {{ form.title.label (class="form-control-label")}}:</h2>
+            {{ form.title(class="input is-large") }}<br>
+            {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            <h2 style="color: #00394d" >
+            {{ form.body.label (class="form-control-label")}}:</h2>
             {{ form.body(class="input is-large") }}<br>
             {% for error in form.body.errors %}
             <span style="color: red;">[{{ error }}]</span>

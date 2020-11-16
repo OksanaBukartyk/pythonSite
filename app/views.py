@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
-from app import app, bcrypt, db
-from app.forms import LoginForm, RegistrationForm, CreateForm, UpdateAccountForm, UpdatePasswordForm
+from app import app, db
+from app.forms import LoginForm, RegistrationForm, CreateForm, UpdateAccountForm, UpdatePasswordForm, UpdatePostForm
 from .models import User, Post
 from flask_login import current_user, login_user, logout_user, login_required
 from PIL import Image
@@ -39,7 +39,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid email or password', 'danger')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember.data)
         next_page = request.args.get('next')
@@ -56,11 +56,11 @@ def signup():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(form.username.data, form.email.data)
+        user = User(username=form.username.data, email =form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+        flash('Congratulations, you are now a registered user!', 'success')
         return redirect(url_for('login'))
     return render_template('signup.html', title='Register', form=form)
 
@@ -68,15 +68,14 @@ def signup():
 @app.route('/all_posts')
 @login_required
 def all_posts():
-    posts = Post.query.all()
-    return render_template('all_posts.html', posts=posts)
+    return render_template('all_posts.html', posts=Post.query.order_by(Post.timestamp.desc()).all())
 
 
-@app.route('/my_posts')
+@app.route('/posts')
 @login_required
-def my_posts():
-    posts = Post.query.filter_by(user_id=current_user.id)
-    return render_template('my_posts.html', posts=posts)
+def posts():
+    return render_template('posts.html',
+                           posts=Post.query.filter_by(user_id=current_user.id).order_by(Post.timestamp.desc()))
 
 
 @app.route('/logout')
@@ -135,7 +134,7 @@ def edit_pass():
             flash('Your password has been updated!', 'success')
             return redirect(url_for('profile'))
         else:
-            flash('Incorrect old password')
+            flash('Incorrect old password','danger')
             return redirect(url_for('edit_pass'))
     return render_template('edit_pass.html', title='Profile', form=form)
 
@@ -145,9 +144,35 @@ def edit_pass():
 def create():
     form = CreateForm()
     if form.validate_on_submit():
-        post = Post(body=form.body.data, user_id=current_user.id)
-        db.session.add(post)
+        db.session.add(Post(body=form.body.data, title = form.title.data, user_id=current_user.id))
         db.session.commit()
-        flash('Congratulations, you create new post!')
-        return redirect(url_for('my_posts'))
+        flash('Congratulations, you create new post!', 'success')
+        return redirect(url_for('posts'))
     return render_template('create.html', form=form)
+
+
+@app.route('/posts/<id>')
+@login_required
+def post(id):
+    return render_template('post.html', post=Post.query.filter_by(id=id))
+
+
+@app.route('/<int:id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    form = UpdatePostForm()
+    if form.validate_on_submit():
+        Post.query.filter_by(id=id).update({'body': form.body.data})
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('post', id=id))
+    return render_template('edit.html', title='Edit', form=form)
+
+
+@app.route('/<int:id>/delete')
+@login_required
+def delete(id):
+    Post.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash('Post was deleted', 'success')
+    return redirect(url_for('posts'))

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField
-from wtforms.validators import InputRequired, Length, Email, EqualTo, DataRequired, ValidationError, Regexp
+from wtforms.validators import InputRequired, Length, Email, EqualTo, DataRequired, ValidationError
 from .models import User
 from flask_login import current_user
 from flask_wtf.file import FileField, FileAllowed
@@ -34,6 +34,7 @@ class RegistrationForm(FlaskForm):
 
 class CreateForm(FlaskForm):
     body = StringField('Body', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired()])
     submit = SubmitField('Create')
 
 
@@ -61,11 +62,18 @@ class UpdateAccountForm(FlaskForm):
 
 
 class UpdatePasswordForm(FlaskForm):
-    password_old = PasswordField('Old Password', validators=[DataRequired(), Length(min=6,
-                                                                                    message="Length of password should be greater than 6")])
+    password_old = PasswordField('Old Password',
+                                 validators=[DataRequired(), Length(min=6,
+                                                                    message="Length of password should be greater than 6")])
 
     password_new = PasswordField('New Password',
                                  validators=[DataRequired(), Length(min=2, max=20)])
     password_new2 = PasswordField('Repeat New Password',
                                   validators=[DataRequired(), EqualTo('password_new')])
     submit = SubmitField('Update password')
+
+
+class UpdatePostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    body = StringField('Body', validators=[DataRequired()])
+    submit = SubmitField('Update')
