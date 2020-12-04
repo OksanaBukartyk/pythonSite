@@ -1,18 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <div class="column is-6 is-offset-3">
-    <h3 class="title">Create new post</h3>
+    <h3 class="title">Edit post</h3>
     <div class="box">
         {% if messages %}
             <div class="notification is-danger">
                 {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
             </div>
         {% endif %}
-        <form method="post" action="{{ url_for('create') }}">
-         
+
+        <form method="post">
+
 
              {{ form.hidden_tag() }}
+
         <p>
             <h2 style="color: #00394d" >
             {{ form.title.label (class="form-control-label")}}:</h2>
@@ -31,8 +34,7 @@
             {% endfor %}
         </p>
 
-        
-        <p>{{ form.submit(class="btn btn-outline-info ") }}</p>
+            <p>{{ form.submit(class="btn btn-outline-info ") }}</p>
 
 
 

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <h3 class="title"> Your choice </h3>
+
+    {% for post in post %}
+    <img width="128px" class="rounded-circle account-img"
+         src="{{  url_for('static', filename='profile_pics/' + post.author.image_file)}}">
+
+    <h2 class="subtitle">Author: {{ post.author.username}} </h2>
+    <h2 class="subtitle">Title: {{ post.title}} </h2>
+    <h2 class="subtitle">Body: {{ post.body}} </h2>
+    <h2 class="subtitle">Created: {{ post.timestamp}} </h2>
+
+    <div class="container">
+
+        <div id="navbarMenuHeroA" class="navbar-menu">
+            <div class="navbar-end">
+
+
+               {% if current_user.id == post.author.id %}
+
+                <a href="{{ url_for('edit', id = post.id)}}" class="navbar-item">Edit</a>
+
+                <a href="{{ url_for('delete', id = post.id)}}" class="navbar-item">Delete</a>
+              {%endif%}
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+</div>
+{% endblock %}

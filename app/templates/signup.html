@@ -4,6 +4,7 @@
 
 {% block content %}
     <div class="column is-6 is-offset-3">
+        <img class="rounded-circle account-img"  src="{{url_for('static', filename='profile_pics/default.jpg')}}" width="100" height="100">
     <h3 class="title">Sign Up</h3>
     <div class="box">
         
@@ -14,10 +15,19 @@
         {% endif %}
     <form action="{{url_for('signup')}}" method="post" novalidate>
         {{ form.hidden_tag() }}
+        
+        <p>
+            <h3 style="color: #00394d" >
+            {{ form.email.label }}:</h3>
+            {{ form.email(class="input is-large") }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
         <p>
 
             <h3 style="color: #00394d" >
-            {{ form.username.label }}</h3>
+            {{ form.username.label }}:</h3>
             {{ form.username(class="input is-large") }}<br>
             {% for error in form.username.errors %}
             <span style="color: red;">[{{ error }}]</span>
@@ -25,15 +35,7 @@
         </p>
         <p>
             <h3 style="color: #00394d" >
-            {{ form.email.label }}</h3>
-            {{ form.email(class="input is-large") }}<br>
-            {% for error in form.email.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            <h3 style="color: #00394d" >
-            {{ form.password.label }}</h3>
+            {{ form.password.label }}:</h3>
             {{ form.password(class="input is-large") }}<br>
             {% for error in form.password.errors %}
             <span style="color: red;">[{{ error }}]</span>
@@ -41,13 +43,13 @@
         </p>
         <p>
             <h3 style="color: #00394d" >
-            {{ form.password2.label }}</h3>
+            {{ form.password2.label }}:</h3>
             {{ form.password2(class="input is-large") }}<br>
             {% for error in form.password2.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>{{ form.submit(class="button is-block is-info is-large is-fullwidth") }}</p>
+        <p>{{ form.submit(class="btn btn-outline-info") }}</p>
     </form>
       </div>
 </div>

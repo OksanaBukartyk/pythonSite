@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ current_user.username }}'s posts</h1>
+    <h1>All users posts</h1>
     <hr>
     {% for post in posts %}
+    
     <img width="128px" class="rounded-circle account-img" src="{{  url_for('static', filename='profile_pics/' + post.author.image_file)}}">
-    <p>Title: {{ post.title }}</p>
-    <p>Body: {{ post.body }}</p>
+   <p>
+    {{ post.author.username }} says: <b>{{ post.body }}</b>
+    </p>
 <a  href="{{ url_for('post', id = post.id)}}" class="navbar-item btn btn-outline-info">More informations &raquo;</a>
  <hr>
     {% endfor %}
 {% endblock %}
+
+
 

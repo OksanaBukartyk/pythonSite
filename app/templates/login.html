@@ -4,6 +4,7 @@
 
 {% block content %}
 <div class="column is-6 is-offset-3">
+     <img class="rounded-circle account-img"  src="{{url_for('static', filename='profile_pics/default.jpg')}}" width="100" height="100">
     <h3 class="title">Log In</h3>
     <div class="box">
         {% if messages %}
@@ -33,7 +34,7 @@
             {% endfor %}
         </p>
         
-        <p>{{ form.submit(class="button is-block is-info is-large is-fullwidth") }}</p>
+        <p>{{ form.submit(class="btn btn-outline-info ") }}</p>
 
 
 
@@ -41,4 +42,5 @@
 
     </div>
 </div>
+
 {% endblock %}
