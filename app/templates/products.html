@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+      <h3 class="title"> Products  </h3>
+
+<style>
+   table {
+    /*border-collapse: collapse; /* Убираем двойные линии */
+    width: 100%; /* Ширина таблицы */
+   }
+   th {
+    background: white; /* Цвет фона ячейки */
+
+    /*text-align: right; /* Выравнивание по левому краю */
+   }
+   td {
+    /*text-align: right; /* Выравнивание по центру */
+   }
+   th, td {
+    border: 1px solid black; /* Параметры рамки */
+    padding: 8px; /* Поля вокруг текста */
+
+   }
+  </style>
+<form class="form-inline ">
+    <input class="form-control border-dark"  type="text" name="q" placeholder="Search" {% if request.args.get('q') != None%}
+    value="{{request.args.get('q')}}" {%endif%}>
+    <button class="btn btn-outline-dark" type="submit">Search</button>
+</form>
+{% if request.args.get('q') != None%}
+<h1><font size="15" color="black" face="fantasy">Search '{{request.args.get('q')}}'</font></h1>
+<hr>
+{% else %}
+<hr>
+{%endif%}
+{% for product in products %}
+<table cellspacing="20"  align="center" width="600" bgcolor="#ffcc00">
+
+		<tr>
+			<th width="200">  Name: </th>
+			<td>  {{ product.name}}  </td>
+		</tr>
+		<tr>
+			<th width="200"> Price:</th>
+			<td>{{ product.price }}</td>
+		</tr>
+        <tr>
+			<th width="200"> Count:</th>
+			<td>{{ product.count }}</td>
+		</tr>
+    <tr>
+			<th width="200"> Type:</th>
+			<td>{{ product.type }}</td>
+		</tr>
+    <tr>
+			<th width="200"> Company:</th>
+			<td>{{ product.company}}</td>
+		</tr>
+    <tr>
+			<th width="200"> Date created:</th>
+			<td>{{ product.timestamp }}</td>
+		</tr>
+</table>
+         <a href="{{url_for('product', product_id=product.id)}}" class="btn btn-outline-dark"> EDIT</a>
+
+<br>
+      {% endfor %}
+
+
+
+    </div>
+
+{% endblock %}
+
+

@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="column is-6 is-offset-3 bg-dark">
+    <legend class="border-bottom mb-4 "><h2>Product</h2></legend>
+    <div class="box">
+
+
+        <p> Name: {{product.name}}</p>
+
+        <p>Count:{{product.count}}</p>
+        <p>Prise: {{product.price}}</p>
+        <p> Type: {{product.type}}</p>
+        <p> Company: {{product.company}}</p>
+         <p> Data created: {{product.timestamp}}</p>
+      </div>
+</div>
+<br>
+<button  class="btn btn-outline-dark" href="{{ url_for('delete_product', product_id=product.id) }}">Delete</button>
+<br>
+<br>
+<div class="column is-6 is-offset-3 bg-dark">
+    <legend class="border-bottom mb-4 "><h2>Update Product</h2></legend>
+    <div class="box">
+
+      {% from "_render_field.html" import render_field %}
+      <form action="{{url_for('product', product_id=product.id)}}" method="post" novalidate>
+          {{ form.hidden_tag() }}
+          {{ render_field(form.name) }}
+          {{ render_field(form.count) }}
+          {{ render_field(form.price) }}
+          {{ render_field(form.type) }}
+          {{ render_field(form.company) }}
+          <p>{{ form.submit(class='btn btn-primary') }}</p>
+      </form>
+    </div>
+</div>
+
+{% endblock %}

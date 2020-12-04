@@ -1,0 +1,10 @@
+{% macro render_field(field) %}
+ <p>
+     <h3 style="color: #00394d" >
+    {{ field.label }}</h3>
+    {{ field(class="input is-large ") }}<br>
+    {% for error in field.errors %}
+    <span style="color: red;">{{ error }}</span>
+         {% endfor %}
+</p>
+{% endmacro %}
