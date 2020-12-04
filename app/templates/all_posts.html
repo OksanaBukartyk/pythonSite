@@ -1,17 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>All users posts</h1>
+<h1><font size="15" color="black" face="fantasy">All users posts </font></h1>
+<hr>
+<div class="row ">
+    <div class="card-deck">
+    {% for post in posts.items %}
+    <div class=" mb-4 ">
+
+    <div class="card h-100 border-light text-white bg-dark">
+            <img class="rounded-circle account-img"  width="259" height="259"
+                 src="{{  url_for('static', filename='profile_pics/' + post.author.image_file)}}">
+
+            <div class="card-body ">
+                <h5 class="card-title">{{post.title}}</h5>
+                <p class="card-text">{{ post.body }}</p>
+                <a href="{{ url_for('post', id = post.id)}}" class="navbar-item btn btn-outline-info">More informations
+                &raquo;</a>
+            </div>
+        </div>
+</div>
     <hr>
-    {% for post in posts %}
-    
-    <img width="128px" class="rounded-circle account-img" src="{{  url_for('static', filename='profile_pics/' + post.author.image_file)}}">
-   <p>
-    {{ post.author.username }} says: <b>{{ post.body }}</b>
-    </p>
-<a  href="{{ url_for('post', id = post.id)}}" class="navbar-item btn btn-outline-info">More informations &raquo;</a>
- <hr>
     {% endfor %}
+    </div>
+</div>
+
+<!-- Pagination Links-->
+<div class="text-right">
+    <a href="{{ url_for('all_posts', page=posts.prev_num) }}"
+       class="btn btn-outline-dark
+       {% if posts.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a>
+    <!-- Loop through the number of pages to display a link for each-->
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if page_num %}
+    <!-- Check for the active page and set the link to "Active"-->
+    {% if posts.page == page_num %}
+    <a href="{{ url_for('all_posts', page=page_num) }}"
+       class="btn btn-dark">
+        {{ page_num }}
+    </a>
+    {% else %}
+    <a href="{{ url_for('all_posts', page=page_num) }}"
+       class="btn btn-outline-dark">
+        {{ page_num }}
+    </a>
+    {% endif %}
+    {% else %}
+    ...
+    {% endif %}
+    {% endfor %}
+    <a href="{{ url_for('all_posts', page=posts.next_num) }}"
+       class="btn btn-outline-dark
+       {% if posts.page == posts.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+</div>
+<p class="text-right mt-3 ">
+    Showing page {{ posts.page }} of {{ posts.pages }}
+</p>
+
 {% endblock %}
 
 

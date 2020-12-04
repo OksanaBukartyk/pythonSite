@@ -77,3 +77,7 @@ class UpdatePostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     body = StringField('Body', validators=[DataRequired()])
     submit = SubmitField('Update')
+
+class SearchForm(FlaskForm):
+    text = StringField('Search', validators=[DataRequired()])
+    submit = SubmitField('Search')

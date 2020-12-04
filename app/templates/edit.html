@@ -1,42 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<div class="column is-6 is-offset-3">
-    <h3 class="title">Edit post</h3>
+{% from "_render_field.html" import render_field %}
+<div class="column is-6 is-offset-3 bg-dark">
+    <legend class="border-bottom mb-4 "><h2>Edit Form</h2></legend>
     <div class="box">
-        {% if messages %}
-            <div class="notification is-danger">
-                {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
-            </div>
-        {% endif %}
 
-        <form method="post">
+        <form method="post" >
 
-
-             {{ form.hidden_tag() }}
-
-        <p>
-            <h2 style="color: #00394d" >
-            {{ form.title.label (class="form-control-label")}}:</h2>
-            {{ form.title(class="input is-large") }}<br>
-            {% for error in form.title.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-
-        <p>
-            <h2 style="color: #00394d" >
-            {{ form.body.label (class="form-control-label")}}:</h2>
-            {{ form.body(class="input is-large") }}<br>
-            {% for error in form.body.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-
+            {{ form.hidden_tag() }}
+            {{ render_field(form.title) }}
+            {{ render_field(form.body) }}
             <p>{{ form.submit(class="btn btn-outline-info ") }}</p>
-
-
 
         </form>
 

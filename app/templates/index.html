@@ -1,6 +1,54 @@
 
 {% extends "base.html" %}
 
+{% block carousel %}
+
+ <div id="demo" class="carousel slide" data-ride="carousel">
+
+        <!-- Indicators -->
+        <ul class="carousel-indicators">
+            <li data-target="#demo" data-slide-to="0" class="active"></li>
+            <li data-target="#demo" data-slide-to="1"></li>
+            <li data-target="#demo" data-slide-to="2"></li>
+        </ul>
+
+        <!-- The slideshow -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+
+                <img src="{{url_for('static', filename='carousel_pics/1.jfif')}}" class="img-responsive" alt="Flower" style="width:100%; height:75vh">
+                <div class="carousel-caption">
+                    <h3>Los Angeles</h3>
+                    <p>We had such a great time in LA!</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{{url_for('static', filename='carousel_pics/0.jpg')}}" class="img-responsive" alt="Flower" style="width:100%; height:75vh">
+                <div class="carousel-caption">
+                    <h3>Los Angeles</h3>
+                    <p>We had such a great time in LA!</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{{url_for('static', filename='carousel_pics/3.jpg')}}" class="img-responsive" alt="Flower" style="width:100%; height:75vh">
+                <div class="carousel-caption">
+                    <h3>Los Angeles</h3>
+                    <p>We had such a great time in LA!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Left and right controls -->
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+
+    </div>
+{% endblock %}
+
 {% block content %}
 <h1 class="title">
     My site
@@ -8,7 +56,8 @@
 <h2 class="subtitle">
    Welcome :)
 </h2>
+<img src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg" width="200px" class="rounded-circle float-center">
+</br>
 
-              <img src="https://mdbootstrap.com/img/Photos/Others/placeholder-avatar.jpg" width="200px" class="rounded-circle float-center">
-            
+
 {% endblock %}

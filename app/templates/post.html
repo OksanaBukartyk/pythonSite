@@ -2,8 +2,8 @@
 
 {% block content %}
 
-<div class="container">
-
+<div class="container bg-dark">
+    </br>
     <h3 class="title"> Your choice </h3>
 
     {% for post in post %}
@@ -13,24 +13,48 @@
     <h2 class="subtitle">Author: {{ post.author.username}} </h2>
     <h2 class="subtitle">Title: {{ post.title}} </h2>
     <h2 class="subtitle">Body: {{ post.body}} </h2>
-    <h2 class="subtitle">Created: {{ post.timestamp}} </h2>
+    <h2 class="subtitle">Created: {{ post.timestamp.strftime("%d-%m-%Y %H:%M:%S")}} </h2>
 
-    <div class="container">
+    <br class="container">
 
-        <div id="navbarMenuHeroA" class="navbar-menu">
-            <div class="navbar-end">
+    <div id="navbarMenuHeroA" class="navbar-menu">
+        <div class="navbar-end">
+            {% if current_user.id == post.author.id %}
+            <a href="{{ url_for('edit', id = post.id)}}" class="navbar-item">Edit</a>
+            <a class="navbar-item" data-toggle="modal" data-target="#myModal">Delete</a>
 
 
-               {% if current_user.id == post.author.id %}
+            <!-- The Modal -->
+            <div class="modal" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content text-dark">
 
-                <a href="{{ url_for('edit', id = post.id)}}" class="navbar-item">Edit</a>
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title ">Confirm page</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
 
-                <a href="{{ url_for('delete', id = post.id)}}" class="navbar-item">Delete</a>
-              {%endif%}
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Are you sure that you want delete this post?
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <a href="{{ url_for('delete', id = post.id)}}" class="btn btn-danger text-light" data-dismiss="">Delete</a>
+                        </div>
+
+                    </div>
+                </div>
             </div>
+
+
+            {%endif%}
         </div>
     </div>
-
-    {% endfor %}
+    </br>
+</div>
+{% endfor %}
 </div>
 {% endblock %}

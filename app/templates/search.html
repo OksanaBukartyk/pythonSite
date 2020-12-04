@@ -1,65 +1,77 @@
 {% extends "base.html" %}
 
 {% block content %}
+<form class="form-inline ">
+    <input class="form-control border-dark"  type="text" name="q" placeholder="Search" {% if request.args.get('q') != None%}
+    value="{{request.args.get('q')}}" {%endif%}>
+    <button class="btn btn-outline-dark" type="submit">Search</button>
+</form>
+{% if request.args.get('q') != None%}
+<h1><font size="15" color="black" face="fantasy">Search '{{request.args.get('q')}}'</font></h1>
+<hr>
+{% else %}
+<hr>
+{%endif%}
+{% for post in posts.items %}
 
-<html>
-<head>
-    <title>Bootstrap Example</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</head>
-<body>
-<div class="dropdown">
-  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-    Dropdown button
-  </button>
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Link 1</a>
-    <a class="dropdown-item" href="#">Link 2</a>
-    <a class="dropdown-item" href="#">Link 3</a>
-  </div>
-</div>
-<div class="container mt-3">
-
-    <h2>Filter by Title</h2>
-
-
-    <input class="form-control" id="myInput" type="text" placeholder="Search..">
-    <div id="myDIV" class="mt-3">
-        <p>I am a paragraph.</p>
-
-        <div>I am a div element inside div.</div>
-        <button class="btn">I am a button</button>
-        <button class="btn btn-info">Another button</button>
-        <p>Another paragraph.</p>
-
-        {% for post in posts %}
-
-        <div class="navbar-item btn btn-outline-info ">
-            {{post.title}}</div>
-        {% endfor %}
+<div class="card border-light text-white bg-dark mb-3" style="max-width: 100%">
+    <div class="row no-gutters">
+        <div class="col-md-3">
+            <img width="500px" class=" account-img"
+                 src="{{  url_for('static', filename='profile_pics/' + post.author.image_file)}}">
+        </div>
+        <div class="col-md-9">
+            <div class="card-body"><br>
+                <h2 class="card-title">Title: {{ post.title }}</h2>
+                <h3 class="card-text">Body: {{ post.body }}</h3>
+                <h4 class="card-text"><small class="text-muted">{{post.timestamp.strftime("%d-%m-%Y %H:%M:%S")}}</small>
+                </h4>
+                <a href="{{ url_for('post', id = post.id)}}" class="navbar-item btn btn-outline-info">More informations
+                    &raquo;</a>
+            </div>
+        </div>
     </div>
 </div>
-<script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myDIV *").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
 
-</script>
+<hr>
+{% endfor %}
 
+<!-- Pagination Links-->
+<div class="text-right">
+    <a href="{{ url_for('search', page=posts.prev_num, q =request.args.get('q')) }}"
+       class="btn btn-outline-dark
+       {% if posts.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a>
+    <!-- Loop through the number of pages to display a link for each-->
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if page_num %}
+    <!-- Check for the active page and set the link to "Active"-->
+    {% if posts.page == page_num %}
+    <a href="{{ url_for('search', page=page_num, q =request.args.get('q')) }}"
+       class="btn btn-dark">
+        {{ page_num }}
+    </a>
+    {% else %}
+    <a href="{{ url_for('search', page=page_num, q =request.args.get('q')) }}"
+       class="btn btn-outline-dark">
+        {{ page_num }}
+    </a>
+    {% endif %}
+    {% else %}
+    ...
+    {% endif %}
+    {% endfor %}
+    <a href="{{ url_for('search', page=posts.next_num , q =request.args.get('q')) }}"
+       class="btn btn-outline-dark
+       {% if posts.page == posts.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+</div>
+<p class="text-right mt-3 ">
+    Showing page {{ posts.page }} of {{ posts.pages }}
+</p>
 
-</body>
-
-</html>
 
 {% endblock %}
 

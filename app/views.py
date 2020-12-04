@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, CreateForm, UpdateAccountForm, UpdatePasswordForm, UpdatePostForm
+from app.forms import LoginForm, RegistrationForm, CreateForm, UpdateAccountForm, UpdatePasswordForm, UpdatePostForm, SearchForm
 from .models import User, Post
 from flask_login import current_user, login_user, logout_user, login_required
 from PIL import Image
@@ -29,6 +29,10 @@ def is_safe_url(target):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/animal')
+def animal():
+    return render_template('animal.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -68,14 +72,23 @@ def signup():
 @app.route('/all_posts')
 @login_required
 def all_posts():
-    return render_template('all_posts.html', posts=Post.query.order_by(Post.timestamp.desc()).all())
+    q = request.args.get('q')
+    if q:
+        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q))
+    else:
+        posts = Post.query.order_by(Post.timestamp.desc())
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=4)
+    return render_template('all_posts.html',posts = posts)
 
 
 @app.route('/posts')
 @login_required
 def posts():
-    return render_template('posts.html',
-                           posts=Post.query.filter_by(user_id=current_user.id).order_by(Post.timestamp.desc()))
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.timestamp.desc()).paginate(page=page, per_page=3)
+    return render_template('posts.html',posts = posts)
+
 
 
 @app.route('/logout')
@@ -122,7 +135,7 @@ def profile():
     return render_template('profile.html', title='Profile', image_file=image_file, form=form)
 
 
-@app.route('/edit_pass', methods=['GET', 'POST'])
+@app.route('/profile/edit_pass', methods=['GET', 'POST'])
 @login_required
 def edit_pass():
     form = UpdatePasswordForm()
@@ -144,10 +157,11 @@ def edit_pass():
 def create():
     form = CreateForm()
     if form.validate_on_submit():
-        db.session.add(Post(body=form.body.data, title = form.title.data, user_id=current_user.id))
+        db.session.add(Post(body=form.body.data, title = form.title.data, author=current_user))
         db.session.commit()
         flash('Congratulations, you create new post!', 'success')
         return redirect(url_for('posts'))
+
     return render_template('create.html', form=form)
 
 
@@ -157,22 +171,52 @@ def post(id):
     return render_template('post.html', post=Post.query.filter_by(id=id))
 
 
-@app.route('/<int:id>/edit', methods=['GET', 'POST'])
+@app.route('/posts/<int:id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit(id):
     form = UpdatePostForm()
-    if form.validate_on_submit():
-        Post.query.filter_by(id=id).update({'body': form.body.data})
-        db.session.commit()
-        flash('Your post has been updated!', 'success')
-        return redirect(url_for('post', id=id))
+    post = Post.query.get(id)
+    if post.user_id == current_user.id:
+        if form.validate_on_submit():
+            Post.query.filter_by(id=id).update({'body': form.body.data,'title': form.title.data})
+            db.session.commit()
+            flash('Your post has been updated!', 'success')
+            return redirect(url_for('post', id=id))
+
+        elif request.method == 'GET':
+            post =Post.query.get(id)
+            form.title.data = post.title
+            form.body.data = post.body
+    else:
+        flash('You try edit not your post!', 'danger')
+        return redirect(url_for('posts', id = current_user.id))
+
     return render_template('edit.html', title='Edit', form=form)
 
 
-@app.route('/<int:id>/delete')
+@app.route('/posts/<int:id>/delete', methods = ['GET', 'POST'])
 @login_required
 def delete(id):
-    Post.query.filter_by(id=id).delete()
-    db.session.commit()
-    flash('Post was deleted', 'success')
-    return redirect(url_for('posts'))
+    post = Post.query.get(id)
+    if post.user_id == current_user.id:
+        Post.query.filter_by(id=id).delete()
+        db.session.commit()
+        flash('Post was deleted', 'success')
+        return redirect(url_for('posts'))
+    else:
+        flash('You try delete not your post!', 'danger')
+        return redirect(url_for('posts', id = current_user.id))
+
+
+@app.route('/search', methods=['GET', 'POST'])
+@login_required
+def search():
+    q = request.args.get('q')
+    page = request.args.get('page', 1, type=int)
+    if q:
+        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q)).order_by(Post.timestamp.desc()).paginate(page=page, per_page=3)
+    else:
+        posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=3)
+    return render_template('search.html', posts=posts)
+
+
