@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% from "_render_field.html" import render_field %}
+        <form action="{{url_for('user_update_admin', id=user.id)}}" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {{ render_field(form.username) }}
+            {{ render_field(form.email) }}
+            {{ render_field(form.admin) }}
+            <p>{{ form.submit(class='btn btn-primary') }}</p>
+        </form>
+
+
+
+{% endblock %}

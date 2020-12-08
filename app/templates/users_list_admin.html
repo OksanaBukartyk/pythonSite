@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<table border="1" width="100%" cellpadding="5">
+    <tr>
+     <th>ID</th>
+     <th>Username</th>
+     <th>Is Admin?</th>
+     <th></th>
+     <th></th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <th>{{user.id}}</th>
+        <th>{{user.username}}</th>
+        <th>{{user.admin}}</th>
+        <th> <a href="{{url_for('user_update_admin', id=user.id)}}" class="btn btn-primary">Edit</a></th>
+        <th><a href="{{url_for('user_delete_admin', id=user.id)}}" class="btn btn-primary">Delete</a></th>
+       </tr>
+
+
+    {% endfor %}
+
+    <li><a href="{{ url_for('home_admin') }}">Back</a></li>
+
+
+{% endblock %}
