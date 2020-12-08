@@ -1,16 +1,18 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, CreateForm, UpdateAccountForm, UpdatePasswordForm, UpdatePostForm, SearchForm
+from app.forms import LoginForm, RegistrationForm, CreateForm, UpdateAccountForm, UpdatePasswordForm, UpdatePostForm
 from .models import User, Post
 from flask_login import current_user, login_user, logout_user, login_required
 from PIL import Image
 
 import os
 import secrets
-from flask import request
+from flask import request, abort
 from werkzeug.urls import url_parse
 from urllib.parse import urlparse, urljoin
 from datetime import datetime
+from functools import wraps
+from app.forms import AdminUserCreateForm, AdminUserUpdateForm
 
 
 @app.before_request
@@ -26,9 +28,19 @@ def is_safe_url(target):
     return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 
+def admin_login_required(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if not current_user.is_admin():
+            return abort(403)
+        return func(*args, **kwargs)
+    return decorated_view
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/animal')
 def animal():
@@ -60,7 +72,7 @@ def signup():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email =form.email.data)
+        user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -79,16 +91,16 @@ def all_posts():
         posts = Post.query.order_by(Post.timestamp.desc())
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=4)
-    return render_template('all_posts.html',posts = posts)
+    return render_template('all_posts.html', posts=posts)
 
 
 @app.route('/posts')
 @login_required
 def posts():
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.timestamp.desc()).paginate(page=page, per_page=3)
-    return render_template('posts.html',posts = posts)
-
+    posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.timestamp.desc()).paginate(page=page,
+                                                                                                   per_page=3)
+    return render_template('posts.html', posts=posts)
 
 
 @app.route('/logout')
@@ -147,7 +159,7 @@ def edit_pass():
             flash('Your password has been updated!', 'success')
             return redirect(url_for('profile'))
         else:
-            flash('Incorrect old password','danger')
+            flash('Incorrect old password', 'danger')
             return redirect(url_for('edit_pass'))
     return render_template('edit_pass.html', title='Profile', form=form)
 
@@ -157,7 +169,7 @@ def edit_pass():
 def create():
     form = CreateForm()
     if form.validate_on_submit():
-        db.session.add(Post(body=form.body.data, title = form.title.data, author=current_user))
+        db.session.add(Post(body=form.body.data, title=form.title.data, author=current_user))
         db.session.commit()
         flash('Congratulations, you create new post!', 'success')
         return redirect(url_for('posts'))
@@ -178,23 +190,23 @@ def edit(id):
     post = Post.query.get(id)
     if post.user_id == current_user.id:
         if form.validate_on_submit():
-            Post.query.filter_by(id=id).update({'body': form.body.data,'title': form.title.data})
+            Post.query.filter_by(id=id).update({'body': form.body.data, 'title': form.title.data})
             db.session.commit()
             flash('Your post has been updated!', 'success')
             return redirect(url_for('post', id=id))
 
         elif request.method == 'GET':
-            post =Post.query.get(id)
+            post = Post.query.get(id)
             form.title.data = post.title
             form.body.data = post.body
     else:
         flash('You try edit not your post!', 'danger')
-        return redirect(url_for('posts', id = current_user.id))
+        return redirect(url_for('posts', id=current_user.id))
 
     return render_template('edit.html', title='Edit', form=form)
 
 
-@app.route('/posts/<int:id>/delete', methods = ['GET', 'POST'])
+@app.route('/posts/<int:id>/delete', methods=['GET', 'POST'])
 @login_required
 def delete(id):
     post = Post.query.get(id)
@@ -205,7 +217,7 @@ def delete(id):
         return redirect(url_for('posts'))
     else:
         flash('You try delete not your post!', 'danger')
-        return redirect(url_for('posts', id = current_user.id))
+        return redirect(url_for('posts', id=current_user.id))
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -214,9 +226,88 @@ def search():
     q = request.args.get('q')
     page = request.args.get('page', 1, type=int)
     if q:
-        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q)).order_by(Post.timestamp.desc()).paginate(page=page, per_page=3)
+        posts = Post.query.filter(Post.title.contains(q) | Post.body.contains(q)).order_by(
+            Post.timestamp.desc()).paginate(page=page, per_page=3)
     else:
         posts = Post.query.order_by(Post.timestamp.desc()).paginate(page=page, per_page=3)
     return render_template('search.html', posts=posts)
 
 
+@app.route('/administrator')
+@login_required
+@admin_login_required
+def admin_home():
+    return render_template('admin_home.html')
+
+
+
+@app.route('/administrator/users-list')
+@login_required
+@admin_login_required
+def users_list_admin():
+    users = User.query.all()
+    return render_template('users_list_admin.html', users=users)
+
+
+@app.route('/administrator/create-user', methods=['GET', 'POST'])
+@login_required
+@admin_login_required
+def user_create_admin():
+    form = AdminUserCreateForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data, admin=form.admin.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('users_list_admin'))
+    return render_template('user_create_admin.html',  form=form)
+
+
+@app.route('/administrator/update-user/<id>', methods=['GET', 'POST'])
+@login_required
+@admin_login_required
+def user_update_admin(id):
+    form = AdminUserUpdateForm()
+    user = User.query.filter_by(id=id).first()
+    if form.validate_on_submit():
+        user.username = form.username.data
+        user.email = form.email.data
+        user.admin = form.admin.data
+        db.session.commit()
+        flash("User was updated", category="info")
+        return redirect(url_for('users_list_admin'))
+    elif request.method == 'GET':
+        user = User.query.get(id)
+        form.username.data = user.username
+        form.email.data = user.email
+        form.admin.data = user.admin
+    return render_template('user_update_admin.html', form=form, user=user)
+
+
+@app.route('/administrator/delete-user/<id>')
+@login_required
+@admin_login_required
+def user_delete_admin(id):
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+    flash("User was deleted", category="info")
+    return render_template('admin_home.html')
+
+
+from flask_admin import BaseView, expose
+
+class HelloView(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('index.html')
+
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin()
+
+
+from flask_admin import AdminIndexView
+
+class MyAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin()

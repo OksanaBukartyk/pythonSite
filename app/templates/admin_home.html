@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Welcome to the Admin Demo</h1>
-<h3>Hey Admin</h3>
 
+<div class="column is-6 is-offset-3 bg-dark">
+    <legend class="border-bottom mb-4 "><h2>Welcome to the Admin Demo</h2></legend>
+   <h3>Hey Admin</h3>
+    <div class="box">
 
+<h4>
 <li><a href="{{ url_for('users_list_admin') }}">List of all users</a></li>
 <li><a href="{{ url_for('user_create_admin') }}">Create a new user</a></li>
-<li><a href="{{ url_for('signup') }}">Click there to logout</a></li>
+    <li><a href="{{ url_for('logout') }}">Log out</a></li></h4>
 
-
+    </div></div>
 
 
 

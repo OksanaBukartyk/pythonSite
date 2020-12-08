@@ -1,7 +1,8 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% block content %}
+<font size="5" face="Courier New" >
 
-<table border="1" width="100%" cellpadding="5">
+<table border="2" width="100%" cellpadding="10">
     <tr>
      <th>ID</th>
      <th>Username</th>
@@ -14,14 +15,18 @@
         <th>{{user.id}}</th>
         <th>{{user.username}}</th>
         <th>{{user.admin}}</th>
-        <th> <a href="{{url_for('user_update_admin', id=user.id)}}" class="btn btn-primary">Edit</a></th>
-        <th><a href="{{url_for('user_delete_admin', id=user.id)}}" class="btn btn-primary">Delete</a></th>
+        <th width="5" class="border-light text-white bg-info ">
+            <a href="{{url_for('user_update_admin', id=user.id)}}" class= "navbar-item">Edit</a></th>
+
+        <th width="5" class="border-light text-white bg-danger ">
+            <a href="{{url_for('user_delete_admin', id=user.id)}}" class="navbar-item">Delete</a></th>
        </tr>
 
 
     {% endfor %}
 
-    <li><a href="{{ url_for('home_admin') }}">Back</a></li>
 
+</table>
+</font>
 
 {% endblock %}

@@ -45,6 +45,16 @@
                     <li class="nav-item active">
                         <a href="{{ url_for('index') }}" class="navbar-item"> Home</a>
                     </li>
+                    {% if current_user.is_authenticated and current_user.is_admin()%}
+                    <li class="nav-item active">
+                        <a href="{{ url_for('admin_home') }}" class="navbar-item"> Administrator</a>
+                        {% endif %}
+                    </li>
+                    {% if current_user.is_authenticated and current_user.is_admin()%}
+                    <li class="nav-item active">
+                        <a href="/admin/" class="navbar-item"> Admin Panel</a>
+                        {% endif %}
+                    </li>
                 </ul>
                 <ul class="navbar-nav navbar-end">
 

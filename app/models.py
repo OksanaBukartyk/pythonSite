@@ -19,6 +19,10 @@ class User(db.Model, UserMixin):
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=dt.utcnow)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    admin = db.Column(db.Boolean, default=False)
+
+    def is_admin(self):
+        return self.admin
 
     def __repr__(self):
         return f'User[{self.username}, {self.email}]'
