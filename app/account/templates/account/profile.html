@@ -1,9 +1,9 @@
 <!-- templates/profile.html -->
 
-{% extends "base.html" %}
+{% extends "/main/base.html" %}
 
 {% block content %}
-{% from "_render_field.html" import render_field %}
+{% from "/main/_render_field.html" import render_field %}
 <div class = "content_section">
 <div class  = "media">
 
@@ -52,7 +52,7 @@
             <p>{{ form.submit(class="btn btn-outline-dark") }}</p>
 
         <div class="form-group">
-            <a class="navbar-item btn btn-outline-info" href="{{ url_for('edit_pass') }}" >
+            <a class="navbar-item btn btn-outline-info" href="{{ url_for('account.edit_pass') }}" >
                 Edit your password</a>
         </div>
     </div>

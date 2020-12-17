@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends '/main/base.html' %}
 
 {% block content %}
 
@@ -8,7 +8,7 @@
 
     {% for post in post %}
     <img width="128px" class="rounded-circle account-img"
-         src="{{  url_for('static', filename='profile_pics/' + post.author.image_file)}}">
+         src="{{  url_for('posts.static', filename='profile_pics/' + post.author.image_file)}}">
 
     <h2 class="subtitle">Author: {{ post.author.username}} </h2>
     <h2 class="subtitle">Title: {{ post.title}} </h2>
@@ -20,7 +20,7 @@
     <div id="navbarMenuHeroA" class="navbar-menu">
         <div class="navbar-end">
             {% if current_user.id == post.author.id %}
-            <a href="{{ url_for('edit', id = post.id)}}" class="navbar-item">Edit</a>
+            <a href="{{ url_for('posts.edit', id = post.id)}}" class="navbar-item">Edit</a>
             <a class="navbar-item" data-toggle="modal" data-target="#myModal">Delete</a>
 
 
@@ -42,7 +42,7 @@
 
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <a href="{{ url_for('delete', id = post.id)}}" class="btn btn-danger text-light" data-dismiss="">Delete</a>
+                            <a href="{{ url_for('posts.delete', id = post.id)}}" class="btn btn-danger text-light" data-dismiss="">Delete</a>
                         </div>
 
                     </div>

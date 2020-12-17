@@ -5,7 +5,7 @@
     <div class="box">
 
 {% from "/main/_render_field.html" import render_field %}
-        <form action="{{url_for('user_create_admin')}}" method="post" novalidate>
+        <form action="{{url_for('administrations.user_create_admin')}}" method="post" novalidate>
             {{ form.hidden_tag() }}
             {{ render_field(form.username) }}
             {{ render_field(form.email) }}

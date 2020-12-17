@@ -16,10 +16,10 @@
         <th>{{user.username}}</th>
         <th>{{user.admin}}</th>
         <th width="5" class="border-light text-white bg-info ">
-            <a href="{{url_for('.user_update_admin', id=user.id)}}" class= "navbar-item">Edit</a></th>
+            <a href="{{url_for('administrations.user_update_admin', id=user.id)}}" class= "navbar-item">Edit</a></th>
 
         <th width="5" class="border-light text-white bg-danger ">
-            <a href="{{url_for('user_delete_admin', id=user.id)}}" class="navbar-item">Delete</a></th>
+            <a href="{{url_for('administrations.user_delete_admin', id=user.id)}}" class="navbar-item">Delete</a></th>
        </tr>
 
 
