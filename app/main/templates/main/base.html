@@ -30,7 +30,7 @@
 <section class="hero is-primary is-medium is-fullheight">
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <a class="navbar-brand" href="{{ url_for('index') }}"><h3>
+            <a class="navbar-brand" href="{{ url_for('main.index') }}"><h3>
                 <img src="https://cdn1.savepice.ru/uploads/2020/11/27/2ad9772ab03903d73fddebdcc33083c3-full.jpg"
                      class="d-inline-block align-top rounded-circle float-center" width="30" height="30" alt=""> My
                 website</h3>
@@ -43,8 +43,12 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a href="{{ url_for('index') }}" class="navbar-item"> Home</a>
+                        <a href="{{ url_for('main.index') }}" class="navbar-item"> Home</a>
                     </li>
+                    <li class="nav-item active">
+                        <a href="{{ url_for('posts.index_posts') }}" class="navbar-item"> Index+posts</a>
+                    </li>
+
                     {% if current_user.is_authenticated and current_user.is_admin()%}
                     <li class="nav-item active">
                         <a href="{{ url_for('admin_home') }}" class="navbar-item"> Administrator</a>
@@ -61,18 +65,17 @@
                 </ul>
                 <ul class="navbar-nav navbar-end">
                     {% if not current_user.is_authenticated %}
-                    <li class="nav-item "><a href="{{ url_for('login') }}" class="navbar-item">Login</a></li>
-                    <li class="nav-item "><a href="{{ url_for('signup') }}" class="navbar-item">Sign Up</a></li>
+                    <li class="nav-item "><a href="{{ url_for('auth.login') }}" class="navbar-item">Login</a></li>
+                    <li class="nav-item "><a href="{{ url_for('auth.signup') }}" class="navbar-item">Sign Up</a></li>
 
                     {% endif %}
 
                     {% if current_user.is_authenticated %}
-                    <li class="nav-item "><a href="{{ url_for('profile') }}" class="navbar-item">Profile</a></li>
-                    <li class="nav-item "><a href="{{ url_for('search')}}" class="navbar-item">Search post</a></li>
-                    <li class="nav-item "><a href="{{ url_for('all_posts')}}" class="navbar-item">All posts</a></li>
-                    <li class="nav-item "><a href="{{ url_for('posts')}}" class="navbar-item">My posts</a></li>
-                    <li class="nav-item "><a href="{{ url_for('create') }}" class="navbar-item">Create post</a></li>
-                    <li class="nav-item "><a href="{{ url_for('logout') }}" class="navbar-item">Log out</a></li>
+                    <li class="nav-item "><a href="{{ url_for('account.profile') }}" class="navbar-item">Profile</a></li>
+                    <li class="nav-item "><a href="{{ url_for('posts.all_posts')}}" class="navbar-item">All posts</a></li>
+                    <li class="nav-item "><a href="{{ url_for('posts.my_posts')}}" class="navbar-item">My posts</a></li>
+                    <li class="nav-item "><a href="{{ url_for('posts.create') }}" class="navbar-item">Create post</a></li>
+                    <li class="nav-item "><a href="{{ url_for('auth.logout') }}" class="navbar-item">Log out</a></li>
                     {% endif %}
 
                 </ul>

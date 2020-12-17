@@ -1,17 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form class="form-inline ">
-    <input class="form-control border-dark"  type="text" name="q" placeholder="Search" {% if request.args.get('q') != None%}
-    value="{{request.args.get('q')}}" {%endif%}>
-    <button class="btn btn-outline-dark" type="submit">Search</button>
-</form>
-{% if request.args.get('q') != None%}
-<h1><font size="15" color="black" face="fantasy">Search '{{request.args.get('q')}}'</font></h1>
+
+
+<h1><font size="15" color="black" face="fantasy">{{ current_user.username }}'s posts</font></h1>
 <hr>
-{% else %}
-<hr>
-{%endif%}
+
 {% for post in posts.items %}
 
 <div class="card border-light text-white bg-dark mb-3" style="max-width: 100%">
@@ -24,8 +18,7 @@
             <div class="card-body"><br>
                 <h2 class="card-title">Title: {{ post.title }}</h2>
                 <h3 class="card-text">Body: {{ post.body }}</h3>
-                <h4 class="card-text"><small class="text-muted">{{post.timestamp.strftime("%d-%m-%Y %H:%M:%S")}}</small>
-                </h4>
+                <h4 class="card-text"><small class="text-muted">{{post.timestamp.strftime("%d-%m-%Y %H:%M:%S")}}</small></h4>
                 <a href="{{ url_for('post', id = post.id)}}" class="navbar-item btn btn-outline-info">More informations
                     &raquo;</a>
             </div>
@@ -35,10 +28,9 @@
 
 <hr>
 {% endfor %}
-
 <!-- Pagination Links-->
 <div class="text-right">
-    <a href="{{ url_for('search', page=posts.prev_num, q =request.args.get('q')) }}"
+    <a href="{{ url_for('posts.posts', page=posts.prev_num) }}"
        class="btn btn-outline-dark
        {% if posts.page == 1 %}disabled{% endif %}">
         &laquo;
@@ -48,12 +40,12 @@
     {% if page_num %}
     <!-- Check for the active page and set the link to "Active"-->
     {% if posts.page == page_num %}
-    <a href="{{ url_for('search', page=page_num, q =request.args.get('q')) }}"
+    <a href="{{ url_for('posts.posts', page=page_num) }}"
        class="btn btn-dark">
         {{ page_num }}
     </a>
     {% else %}
-    <a href="{{ url_for('search', page=page_num, q =request.args.get('q')) }}"
+    <a href="{{ url_for('posts.posts', page=page_num) }}"
        class="btn btn-outline-dark">
         {{ page_num }}
     </a>
@@ -62,7 +54,7 @@
     ...
     {% endif %}
     {% endfor %}
-    <a href="{{ url_for('search', page=posts.next_num , q =request.args.get('q')) }}"
+    <a href="{{ url_for('posts.posts', page=posts.next_num) }}"
        class="btn btn-outline-dark
        {% if posts.page == posts.pages %}disabled{% endif %}">
         &raquo;
@@ -74,4 +66,3 @@
 
 
 {% endblock %}
-
