@@ -2,8 +2,9 @@
 """
 hello_flask: First Python-Flask webapp
 """
-from app import app
+from app import create_app
+from config import Config
 
 if __name__ == '__main__':
   # Script executed directly?
-    app.run(debug=True)  # Launch built-in web server and run this Flask webapp
+    create_app(Config).run(debug=True)  # Launch built-in web server and run this Flask webapp
