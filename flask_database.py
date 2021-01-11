@@ -1,7 +1,7 @@
 from flask_script import Manager, prompt_bool, Command
 
 from app import db
-from app.models import Company, Product
+from app.models import Category, Product, User
 
 manager = Manager(usage="Perform database operations")
 
@@ -26,8 +26,9 @@ def recreate():
 
 @manager.command
 def init_data():
-
-    p = Company(name="test post")
+    user = User(username="Test", email="test@mail.com", password_hash="password")
+    db.session.add(user)
+    p = Category(name="test post")
     db.session.add(p)
     u = Product(name="Test", price="122", count="122", kind="122",author = p)
     db.session.add(u)

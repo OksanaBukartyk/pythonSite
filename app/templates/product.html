@@ -10,8 +10,8 @@
 
         <p>Count:{{product.count}}</p>
         <p>Prise: {{product.price}}</p>
-        <p> Type: {{product.type}}</p>
-        <p> Company: {{product.company}}</p>
+
+        <p> Company: {{product.category}}</p>
          <p> Data created: {{product.timestamp}}</p>
       </div>
 </div>
@@ -29,8 +29,7 @@
           {{ render_field(form.name) }}
           {{ render_field(form.count) }}
           {{ render_field(form.price) }}
-          {{ render_field(form.type) }}
-          {{ render_field(form.company) }}
+          {{ render_field(form.category) }}
           <p>{{ form.submit(class='btn btn-primary') }}</p>
       </form>
     </div>

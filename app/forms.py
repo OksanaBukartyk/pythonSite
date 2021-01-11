@@ -15,10 +15,8 @@ class CreateProductForm(FlaskForm):
     price = StringField('Cost', validators=[Length(min=1, max=10,
                                               message='This field length must be between 3 and 25 characters'),
                                               DataRequired('This field is required')])
-    type = StringField('Type' ,validators =[Length(min=3, max=25,
-                                              message='This field length must be between 3 and 25 characters'),
-                                              DataRequired('This field is required')])
-    company =  SelectField(u'Company', coerce=str)
+
+    category =  SelectField(u'Category', coerce=str)
     submit = SubmitField('Create')
 
 
@@ -29,6 +27,6 @@ class UpdateProductForm(FlaskForm):
 
     count = StringField('Number', validators=[DataRequired()])
     price = StringField('Cost', validators=[DataRequired()])
-    type = StringField('Type')
-    company = SelectField(u'Company', coerce=str)
+
+    category = SelectField(u'Category', coerce=str)
     submit = SubmitField('Update')
